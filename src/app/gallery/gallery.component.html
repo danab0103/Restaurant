@@ -1,0 +1,19 @@
+<mat-grid-list cols="3" rowHeight="1:1">
+    <mat-grid-tile *ngFor="let photo of photos ; let i=index" (click)="openDialog(i)">
+      <img [src]="photo.src">
+    </mat-grid-tile>
+  </mat-grid-list>
+  <div class="lightbox" *ngIf="previewImage">
+    <button mat-icon-button class="close-btn" (click)="closePreview()" >
+        <mat-icon>close</mat-icon>
+    </button>
+    <button mat-icon-button class="btn-prev" (click)="previousImage()">
+        <mat-icon>arrow_back</mat-icon>
+    </button>
+    <button mat-icon-button class="btn-next" (click)="nextImage()">
+        <mat-icon>arrow_forward</mat-icon>
+    </button>
+    <div class="lightbox" *ngIf="previewImage">
+        <img [src]="currentImage.src" alt="currentImage.alt">
+      </div>
+  </div>

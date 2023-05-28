@@ -1,0 +1,26 @@
+.reservation-form {
+    background-color: rgb(142, 184, 131);
+    padding: 20px;
+    border: 5px solid white;
+    color: rgb(38, 97, 28);
+    font-size: 1rem;
+    font-weight: bolder;
+    border-radius: 5%;
+  }
+
+  
+  .form-title {
+    text-align: center;
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .gbg{
+    background-color: rgb(142, 184, 131);
+    padding: 10px;
+  }
+
+  .btnpadding{
+    padding-top: 15px;
+  }

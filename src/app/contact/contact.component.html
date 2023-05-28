@@ -1,0 +1,41 @@
+<div class="gbg">
+  <div class="container">
+  <div class="row justify-content-center">
+    <div class="col-lg-4">
+      <form class="reservation-form" novalidate>
+        <h1 class="form-title">Fă o rezervare! :)</h1>
+        <div class="form-group">
+          <label for="firstName">Nume</label>
+          <input type="text" class="form-control" id="firstName" name="firstName" [(ngModel)]="newFirstName" required/>
+        </div>
+        <div class="form-group">
+          <label for="fullName">Prenume</label>
+          <input type="text" class="form-control" id="lastName" name="lastName" [(ngModel)]="newLastName" required/>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" class="form-control" id="email" name="email" [(ngModel)]="newEmail" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}" #emailInput="ngModel" placeholder="ex: nume@example.eg">
+          <div *ngIf="emailInput.invalid && (emailInput.dirty || emailInput.touched)" class="text-danger">Format invalid pentru email</div>
+        </div>
+        <div class="form-group">
+          <label for="phone">Telefon</label>
+          <input type="tel" class="form-control" id="phone" name="phone" [(ngModel)]="newPhone" required pattern="[0-9]{10}" placeholder="ex: 0745634574" #phoneInput="ngModel">
+          <div *ngIf="phoneInput.invalid && (phoneInput.dirty || phoneInput.touched)" class="text-danger">Format invalid pentru nr. de telefon</div>
+        </div>
+        <div class="form-group">
+          <label for="date">Dată</label>
+          <input type="date" class="form-control" id="date" name="date" [(ngModel)]="newDate" [min]="newDate" [max]="maxDate" required/>
+        </div>
+        <div class="form-group">
+          <label for="numberOfGuests">Numărul de oaspeți</label>
+          <input type="number" class="form-control" id="numberOfPeople" name="numberOfPeople" [(ngModel)]="newNumberOfPeople" [min]="1" [max]="50" required #numberInput="ngModel">
+          <div *ngIf="numberInput.invalid && (numberInput.dirty || numberInput.touched)" class="text-danger">Numarul nu apartine intervalului 1-50</div>       
+        </div>
+        <div class="text-center btnpadding">
+        <button type="submit" (click)="addReservation()" class="btn btn-success" [disabled]="!isFormValid()">Rezervă</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
