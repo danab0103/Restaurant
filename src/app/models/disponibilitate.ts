@@ -1,5 +1,4 @@
 export class Disponibilitate{
-    
     date: string;
     numberOfAvailableSeats: number;
 

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { addDoc, collectionData, collection, Firestore, getDocs, doc, updateDoc } from '@angular/fire/firestore';
+import { addDoc, collectionData, collection, Firestore, getDocs, doc, updateDoc, setDoc, getDoc, DocumentSnapshot } from '@angular/fire/firestore';
 import { Observable, from } from 'rxjs';
 import { Disponibilitate } from '../models/disponibilitate';
 
@@ -34,4 +34,25 @@ export class DisponibilitateService {
     const updateObject = { [fieldName]: newValue };
     return updateDoc(documentRef, updateObject);
   }
+
+  getNumarDeLocuriById(documentId: string): Observable<number> {
+    const documentRef = doc(this.fs, 'Disponibilitate', documentId);
+    return new Observable<number>(observer => {
+      getDoc(documentRef)
+        .then((docSnapshot: DocumentSnapshot<any>) => {
+          if (docSnapshot.exists()) {
+            const documentData = docSnapshot.data();
+            const numarDeLocuri = documentData.numberOfAvailableSeats;
+            observer.next(numarDeLocuri);
+          } else {
+            observer.error('Document does not exist');
+          }
+          observer.complete();
+        })
+        .catch(error => {
+          observer.error(error);
+        });
+    });
+  }
 }
+

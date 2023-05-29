@@ -24,12 +24,12 @@
         </div>
         <div class="form-group">
           <label for="date">Dată</label>
-          <input type="date" class="form-control" id="date" name="date" [(ngModel)]="newDate" [min]="newDate" [max]="maxDate" required/>
+          <input type="date" class="form-control" id="date" name="date" [(ngModel)]="newDate" [min]="minDate" [max]="maxDate" required/>
         </div>
         <div class="form-group">
           <label for="numberOfGuests">Numărul de oaspeți</label>
           <input type="number" class="form-control" id="numberOfPeople" name="numberOfPeople" [(ngModel)]="newNumberOfPeople" [min]="1" [max]="50" required #numberInput="ngModel">
-          <div *ngIf="numberInput.invalid && (numberInput.dirty || numberInput.touched)" class="text-danger">Numarul nu apartine intervalului 1-50</div>       
+          <div *ngIf="numberInput.invalid && (numberInput.dirty || numberInput.touched)" class="text-danger">Acest numar de locuri nu este disponibil.</div>       
         </div>
         <div class="text-center btnpadding">
         <button type="submit" (click)="addReservation()" class="btn btn-success" [disabled]="!isFormValid()">Rezervă</button>

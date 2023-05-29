@@ -5,69 +5,85 @@ import { Router } from '@angular/router';
 import { Disponibilitate } from '../models/disponibilitate';
 import { DisponibilitateService } from '../services/disponibilitate.service';
 import { Observable } from 'rxjs';
+import { updateDoc } from '@angular/fire/firestore';
+
+interface Disponibilitate2 {
+  data: string;
+  numar: number;
+}
 
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.css']
 })
-export class ContactComponent{
- 
-  newDate: string;
-  maxDate = '2023-06-30';
-  disponibilities: Disponibilitate[] = [];
-  documents: any[] = [];
 
-  constructor(private rezervareService: RezervareService, private disponibilitateService: DisponibilitateService, private router: Router){
-    this.newDate = new Date().toISOString().split('T')[0];
+
+export class ContactComponent {
+
+  minDate: string;
+  maxDate = '2023-06-30';
+  disponibilities2: Disponibilitate2[] = [];
+  documents: string[] = [];
+
+  constructor(private rezervareService: RezervareService, private disponibilitateService: DisponibilitateService, private router: Router) {
+    this.minDate = new Date().toISOString().split('T')[0];
   }
 
   newFirstName: string = '';
   newLastName: string = '';
+  newDate: string ='';
   newEmail: string = '';
   newPhone: string = '';
   newNumberOfPeople: number = 0;
   newNumberOfAvailableSeats: number = 0;
+  numberOfPlaces: number[]=[];
+  locuri: number = 0;
 
 
-  getDisponibility()
-  {
-    this.disponibilitateService.getDisponibility().subscribe(result=>
-      {
-        this.disponibilities = result;
+  getDisponibility() {
+    this.disponibilitateService.getDisponibility().subscribe(result => {
+      result.forEach(element => {
+        var obiect: Disponibilitate2 = { data: '', numar: 0 };
+        obiect.data = element.date;
+        obiect.numar = element.numberOfAvailableSeats;
+        if(this.disponibilities2.length<=35)
+           this.disponibilities2.push(obiect);
       });
+    });
+    //console.log(this.disponibilities2);
   }
 
-  addReservation(){
+  addReservation() {
     let newReservation = {
-                          firstName: this.newFirstName, 
-                          lastName: this.newLastName,
-                          email: this.newEmail,
-                          phone: this.newPhone,
-                          date: this.newDate,
-                          numberOfPeople: this.newNumberOfPeople,
-                        };
-    //this.rezervareService.addReservation(newReservation);
+      firstName: this.newFirstName,
+      lastName: this.newLastName,
+      email: this.newEmail,
+      phone: this.newPhone,
+      date: this.newDate,
+      numberOfPeople: this.newNumberOfPeople,
+    };
+    this.rezervareService.addReservation(newReservation);
+    //this.getDisponibility();
     //this.getAllDocuments();
-    //let i = 0;
-    //console.log(this.arr);
-    //for (var ar of this.arr) {
-    //   if (ar.date === this.newDate) {
-      //  ar.numberOfAvailableSeats -= this.newNumberOfPeople;
-       //this.disponibilitateService.updateDocument(this.documents[i], 'numberOfAvailableSeats', updatedValue);
-    //}
-      //i+=1;
-     //}
-     //console.log(this.arr);
-    //this.router.navigate(['/reservation']);
+    let anotherDate: string = this.newDate;
+    this.disponibilitateService.getNumarDeLocuriById(anotherDate).subscribe(numarDeLocuri => {var updateValue: number = numarDeLocuri;
+      this.locuri = numarDeLocuri;
+      updateValue = updateValue - this.newNumberOfPeople;
+      this.disponibilitateService.updateDocument(anotherDate, 'numberOfAvailableSeats', updateValue);});
+      console.log(this.numberOfPlaces);
+    this.router.navigate(['/reservation']);
   }
 
-
-  getAllDocuments(){
-    this.disponibilitateService.getAllDocuments().subscribe(result=>
-      {
-        this.documents = result;
+  getAllDocuments() {
+    this.disponibilitateService.getAllDocuments().subscribe(result => {
+      result.forEach(element => {
+        var obiect: string = ' ';
+        obiect = element;
+        if(this.documents.length<=35)
+           this.documents.push(obiect);
       });
+    });
   }
 
   isFormValid(): boolean {
@@ -84,10 +100,12 @@ export class ContactComponent{
     return phoneRegex.test(this.newPhone);
   }
 
-  isValidNumber(): boolean {
-    if(this.newNumberOfPeople>=1 && this.newNumberOfPeople<=50)
-       return true;
+  isValidNumber(): boolean{
+    if ((this.newNumberOfPeople <= 1 && this.newNumberOfPeople >= 50))
+    {
+      return false;
+    }
     else
-    return false;
-  }
+        return true;
+}
 }
